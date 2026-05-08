@@ -1,19 +1,17 @@
-// Quantumult X 拦截访问 + 提取Code
+// 提取Code + 重定向禁止访问
 !(async () => {
   const url = $request.url;
   // 提取code
-  const m = url.match(/code=([^&]+)/);
-  if (m) {
-    let code = m[1];
-    $notify("已拦截并提取Code","",code);
-    console.log("拦截URL：" + url);
-    console.log("提取Code：" + code);
+  const codeMatch = url.match(/code=([^&]+)/);
+  if (codeMatch && codeMatch[1]) {
+    const code = codeMatch[1];
+    $notify("✅ 已拦截并重定向", "提取到Code", code);
+    console.log("拦截URL：", url);
+    console.log("Code：", code);
   }
-  // 强制拒绝连接，浏览器打不开
+
+  // 核心：重定向到空白页，浏览器无法访问原链接
   $done({
-    response: {
-      status: 403,
-      body: "已被圈X拦截"
-    }
+    redirect: "about:blank"
   });
 })();
