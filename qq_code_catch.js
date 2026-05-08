@@ -1,22 +1,19 @@
-// Quantumult X 先拦截请求 再提取url中的code
+// Quantumult X 拦截访问 + 提取Code
 !(async () => {
-  // 1. 先提取 URL 中的 code
   const url = $request.url;
-  const reg = /code=([^&]+)/;
-  const result = url.match(reg);
-
-  if (result && result[1]) {
-    const code = result[1];
-    // 弹窗通知
-    $notify("捕获Code成功", "已拦截请求", code);
-    // 日志打印
-    console.log("===== 拦截成功 =====");
-    console.log("完整链接：", url);
-    console.log("提取Code：", code);
-  } else {
-    console.log("未匹配到 code 参数");
+  // 提取code
+  const m = url.match(/code=([^&]+)/);
+  if (m) {
+    let code = m[1];
+    $notify("已拦截并提取Code","",code);
+    console.log("拦截URL：" + url);
+    console.log("提取Code：" + code);
   }
-
-  // 2. 直接拦截请求 拒绝放行
-  $done({ cancel: true });
+  // 强制拒绝连接，浏览器打不开
+  $done({
+    response: {
+      status: 403,
+      body: "已被圈X拦截"
+    }
+  });
 })();
