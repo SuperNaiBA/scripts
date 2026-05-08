@@ -1,17 +1,19 @@
-// 提取Code + 重定向禁止访问
+// 提取code + 强制重定向到127.0.0.1 禁止访问
 !(async () => {
-  const url = $request.url;
-  // 提取code
-  const codeMatch = url.match(/code=([^&]+)/);
-  if (codeMatch && codeMatch[1]) {
-    const code = codeMatch[1];
-    $notify("✅ 已拦截并重定向", "提取到Code", code);
-    console.log("拦截URL：", url);
-    console.log("Code：", code);
-  }
+    const url = $request.url;
 
-  // 核心：重定向到空白页，浏览器无法访问原链接
-  $done({
-    redirect: "about:blank"
-  });
+    // 提取URL中的code参数
+    const codeReg = /code=([^&]+)/;
+    const codeRes = url.match(codeReg);
+    if (codeRes && codeRes[1]) {
+        const code = codeRes[1];
+        $notify("已拦截重定向", "提取Code成功", code);
+        console.log("拦截链接：" + url);
+        console.log("获取Code：" + code);
+    }
+
+    // 强制重定向到本地127.0.0.1，彻底无法访问
+    $done({
+        redirect: "http://127.0.0.1"
+    });
 })();
