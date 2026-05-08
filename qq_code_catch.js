@@ -1,8 +1,9 @@
 /*
-项目名称：QQ Code 提取
-功能：提取 URL 中的 code 参数
-适用：Quantumult X
-作者：你的名字
+功能：
+1. 拦截 QQ 请求
+2. 提取 code
+3. 通知显示
+4. 阻止请求继续发送
 */
 
 const url = $request.url;
@@ -18,18 +19,20 @@ try {
         console.log("=============================");
 
         $notify(
-            "QQ Code 提取成功",
-            "已获取 code",
+            "QQ 请求已拦截",
+            "成功获取 code",
             code
         );
-
-        // 持久化保存
-        $prefs.setValueForKey(code, "qq_code");
     } else {
-        console.log("未找到 code 参数");
+        console.log("未找到 code");
     }
+
 } catch (e) {
     console.log("解析失败: " + e);
 }
 
-$done({});
+// 阻止请求
+$done({
+    status: "HTTP/1.1 404 Not Found",
+    body: ""
+});
