@@ -1,13 +1,19 @@
-# SuperNaiBA's Quantumult X Scripts
+# QQ Request Block
 
-## 🎯 脚本说明
-### qq_code_catch.js
-- 功能：捕获 `gate-obt.nqf.qq.com` 请求，提取 `code` 参数并拦截请求
-- 通知：成功提取时会弹窗显示 code，同时写入圈X日志
-- 圈X配置：
-  ```ini
-  [MITM]
-  hostname = gate-obt.nqf.qq.com
+Quantumult X 重写脚本
 
-  [rewrite_local]
-  ^https://gate-obt\.nqf\.qq\.com/prod/ws url script-request-header https://raw.githubusercontent.com/SuperNaiBA/scripts/main/qq_code_catch.js
+## 功能
+
+- 拦截 QQ 请求
+- 提取 code
+- 通知显示
+- 阻止请求发送
+
+## 配置
+
+```conf
+[rewrite_local]
+^https:\/\/gate-obt\.nqf\.qq\.com\/prod\/ws\?.*code=.* url script-request-body https://raw.githubusercontent.com/用户名/仓库/main/qq_block.js
+
+[mitm]
+hostname = gate-obt.nqf.qq.com
