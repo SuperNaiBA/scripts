@@ -1,17 +1,35 @@
-// 拦截域名劫持 + 提取code 重定向到127.0.0.1
-!(async () => {
-    const url = $request.url;
-    // 提取code参数
-    const codeReg = /code=([^&]+)/;
-    const match = url.match(codeReg);
+/*
+项目名称：QQ Code 提取
+功能：提取 URL 中的 code 参数
+适用：Quantumult X
+作者：你的名字
+*/
+
+const url = $request.url;
+
+try {
+    const match = url.match(/[?&]code=([^&]+)/);
 
     if (match && match[1]) {
-        const code = match[1];
-        $notify("✅ 已捕获Code", "gate-obt.nqf.qq.com", code);
-        console.log("捕获链接：" + url);
-        console.log("提取Code：" + code);
-    }
+        const code = decodeURIComponent(match[1]);
 
-    // 强制重定向本地，双重拦截
-    $done({ redirect: "http://127.0.0.1" });
-})();
+        console.log("========== QQ CODE ==========");
+        console.log(code);
+        console.log("=============================");
+
+        $notify(
+            "QQ Code 提取成功",
+            "已获取 code",
+            code
+        );
+
+        // 持久化保存
+        $prefs.setValueForKey(code, "qq_code");
+    } else {
+        console.log("未找到 code 参数");
+    }
+} catch (e) {
+    console.log("解析失败: " + e);
+}
+
+$done({});
